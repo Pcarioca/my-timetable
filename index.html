@@ -1,16 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Andrei — Timetable</title>
 <style>
   :root{
+    /* LIGHT THEME (used for print by default) */
     --bg: #ffffff;
-    --ink: #0f172a;
-    --grid: #e5e7eb;
-    --muted: #6b7280;
-    /* subject colors (soft pastels with good print contrast) */
+    --ink: #0f172a; /* slate-900 */
+    --grid: #e5e7eb; /* gray-200 */
+    --muted: #475569; /* slate-600 */
+    --cell: #fafafa; /* table cell fill */
+    --badge: rgba(0,0,0,.08);
+    /* subject colors (light) */
     --aif: #e0f2fe;  /* sky-100 */
     --dmd: #fde68a;  /* amber-200 */
     --ipr: #fce7f3;  /* pink-100 */
@@ -18,9 +21,33 @@
     --cet: #ede9fe;  /* violet-100 */
     --ssd: #fee2e2;  /* rose-100 */
     --unknown: #fff7ed; /* orange-50 */
-    --badge: rgba(0,0,0,.08);
+    /* work stripe colors (light) */
+    --workA: rgba(2,6,23,.04); /* very light slate */
+    --workB: rgba(2,6,23,.10);
+    --workBorder: #94a3b8; /* slate-400 */
+  }
+  [data-theme="dark"]{
+    /* DARK THEME (default on load) */
+    --bg:#0b1220; /* deep slate/navy */
+    --ink:#f8fafc; /* near white */
+    --grid:#1f2937; /* gray-800 */
+    --muted:#cbd5e1; /* slate-300 */
+    --cell:#111827; /* gray-900 */
+    --badge: rgba(255,255,255,.14);
+    /* subject colors (dark) */
+    --aif:#075985; --dmd:#92400e; --ipr:#9d174d; --lsic:#065f46; --cet:#5b21b6; --ssd:#7f1d1d; --unknown:#78350f;
+    /* work stripe colors (dark) */
+    --workA: rgba(148,163,184,.18); /* slate-400 */
+    --workB: rgba(148,163,184,.34);
+    --workBorder: #cbd5e1; /* slate-300 */
   }
   @media print {
+    /* Force light palette for print */
+    :root{
+      --bg: #ffffff; --ink: #0f172a; --grid:#e5e7eb; --muted:#475569; --cell:#ffffff; --badge: rgba(0,0,0,.08);
+      --aif:#e0f2fe; --dmd:#fde68a; --ipr:#fce7f3; --lsic:#dcfce7; --cet:#ede9fe; --ssd:#fee2e2; --unknown:#fff7ed;
+      --workA: rgba(2,6,23,.04); --workB: rgba(2,6,23,.10); --workBorder:#94a3b8;
+    }
     body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   }
   *{ box-sizing: border-box; }
@@ -28,22 +55,32 @@
     margin:0; padding:24px; background:var(--bg); color:var(--ink);
     font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji";
   }
-  .page{ max-width: 1050px; margin: 0 auto; }
-  h1{ margin:0 0 6px; font-size: 28px; }
+  .page{ max-width: 1100px; margin: 0 auto; }
+  .topbar{ display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:6px; }
+  h1{ margin:0; font-size: 28px; }
   .sub{ color:var(--muted); font-size: 12px; margin-bottom: 16px; }
   .legend{ display:flex; flex-wrap:wrap; gap:8px 14px; margin: 10px 0 18px; font-size:12px; }
-  .chip{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:10px; border:1px dashed var(--grid); }
-  .sw{ width:14px; height:14px; border-radius:4px; border:1px solid rgba(0,0,0,.08); }
+  .chip{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:12px; border:1px dashed var(--grid); background:transparent; color:var(--ink); }
+  .sw{ width:14px; height:14px; border-radius:4px; border:1px solid rgba(0,0,0,.12); }
+  .sw-work{ background: repeating-linear-gradient(135deg, var(--workA), var(--workA) 6px, var(--workB) 6px, var(--workB) 12px); border:1px dashed var(--workBorder) !important; }
+
+  /* controls */
+  .actions{ display:flex; align-items:center; gap:10px; }
+  .control{ display:inline-flex; align-items:center; gap:8px; border:1px solid var(--grid); border-radius:10px; padding:6px 10px; font-size:12px; }
+  select{ background:transparent; color:var(--ink); border:none; outline:none; font-size:12px; }
+  .toggle{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; border-radius:999px; border:1px solid var(--grid); background:transparent; color:var(--ink); font-size:12px; cursor:pointer; }
+  .toggle:focus{ outline:2px solid var(--grid); outline-offset:2px; }
+  .toggle .icon{ width:16px; height:16px; display:inline-block; }
 
   table{ width:100%; border-collapse:separate; border-spacing:8px; }
-  thead th{ font-size:13px; font-weight:600; color:#111827; text-align:center; padding:6px 0; }
-  tbody th{ width:92px; text-align:right; padding:8px 10px; font-weight:600; font-size:12px; color:#111827; white-space:nowrap; }
-  td{ height:84px; vertical-align:top; border:1px solid var(--grid); border-radius:14px; padding:10px 12px; background:#fafafa; }
+  thead th{ font-size:13px; font-weight:600; color:var(--ink); text-align:center; padding:6px 0; }
+  tbody th{ width:92px; text-align:right; padding:8px 10px; font-weight:600; font-size:12px; color:var(--ink); white-space:nowrap; }
+  td{ height:84px; vertical-align:top; border:1px solid var(--grid); border-radius:14px; padding:0; background:var(--cell); }
   .slot{ display:flex; flex-direction:column; gap:6px; line-height:1.25; }
-  .subject{ font-weight:700; letter-spacing:.2px; }
-  .room{ font-size:12px; color:#111827; opacity:.95; }
+  .subject{ font-weight:700; letter-spacing:.2px; text-transform:uppercase; font-size:12px; }
+  .room{ font-size:12px; color:var(--ink); opacity:.95; }
   .badges{ display:flex; gap:6px; flex-wrap:wrap; }
-  .badge{ font-size:10px; padding:3px 6px; border-radius:6px; background:var(--badge); }
+  .badge{ font-size:10px; padding:3px 6px; border-radius:6px; background:var(--badge); color:var(--ink); }
   /* subject backgrounds */
   .AIF{ background:var(--aif); }
   .DMD{ background:var(--dmd); }
@@ -52,16 +89,41 @@
   .CET{ background:var(--cet); }
   .SSD{ background:var(--ssd); }
   .UNK{ background:var(--unknown); border-style:dashed; }
+  .WORK{ background: repeating-linear-gradient(135deg, var(--workA), var(--workA) 8px, var(--workB) 8px, var(--workB) 16px); border:1px dashed var(--workBorder); }
   /* spacing helpers inside cells */
-  .pad{ padding:10px 12px; border-radius:12px; height:100%; }
+  .pad{ padding:10px 12px; border-radius:12px; height:auto; min-height:58px; }
   .notes{ margin-top:10px; font-size:11px; color:var(--muted); }
   .footer{ margin-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted); }
 </style>
 </head>
 <body>
   <div class="page">
-    <h1>Weekly Timetable</h1>
-    <div class="sub">All slots are 2 hours • No classes Sat/Sun • Abbrev: (c)=course, (l)=lab, (p)=project</div>
+    <div class="topbar">
+      <h1>Weekly Timetable</h1>
+      <div class="actions">
+        <label class="control">Week
+          <select id="weekSelect" aria-label="Select academic week">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+          </select>
+        </label>
+        <span id="weekParity" class="badge" aria-live="polite"></span>
+        <button id="themeToggle" class="toggle" aria-label="Light mode" title="Toggle theme"><span class="icon" aria-hidden="true"></span><span class="label">Light mode</span></button>
+      </div>
+    </div>
+    <div class="sub">All slots are 2 hours • No classes Sat/Sun • Abbrev: (c)=course, (l)=lab, (p)=project • Striped cards = Work shifts</div>
 
     <div class="legend">
       <span class="chip"><span class="sw" style="background:var(--aif)"></span>AIF — Artificial Intelligence Fundamentals</span>
@@ -70,6 +132,7 @@
       <span class="chip"><span class="sw" style="background:var(--lsic)"></span>LSIC — Large Scale Integrated Circuits</span>
       <span class="chip"><span class="sw" style="background:var(--cet)"></span>CET — Computer Engineering & Testing</span>
       <span class="chip"><span class="sw" style="background:var(--ssd)"></span>SSD — Software Systems Design</span>
+      <span class="chip"><span class="sw sw-work"></span>Work shift</span>
     </div>
 
     <table aria-label="Timetable">
@@ -87,42 +150,45 @@
         <!-- 08-10 -->
         <tr>
           <th>08:00 – 10:00</th>
-          <td class="AIF"><div class="slot pad">
+          <td><div class="slot pad AIF">
             <div class="subject">AIF (c)</div>
             <div class="room">204CP</div>
           </div></td>
-          <td class="CET"><div class="slot pad">
+          <td><div class="slot pad CET">
             <div class="subject">CET (c)</div>
             <div class="room">304CP</div>
           </div></td>
-          <td class="DMD"><div class="slot pad">
+          <td><div class="slot pad DMD">
             <div class="subject">DMD (l)</div>
             <div class="room">B413B</div>
           </div></td>
           <td></td>
-          <td class="CET"><div class="slot pad">
+          <td><div class="slot pad CET" data-show="1-10">
             <div class="subject">CET (c)</div>
             <div class="room">304CP</div>
-            <div class="badges"><span class="badge">weeks 1-10</span></div>
+            <div class="badges"><span class="badge">weeks 1–10</span></div>
           </div></td>
         </tr>
         <!-- 10-12 -->
         <tr>
           <th>10:00 – 12:00</th>
-          <td class="DMD"><div class="slot pad">
+          <td><div class="slot pad DMD">
             <div class="subject">DMD (c)</div>
             <div class="room">304CP</div>
           </div></td>
-          <td class="IPR"><div class="slot pad">
+          <td><div class="slot pad IPR">
             <div class="subject">IPR (l)</div>
             <div class="room">S4 ASPC</div>
           </div></td>
-          <td></td>
-          <td class="SSD"><div class="slot pad">
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
+          <td><div class="slot pad SSD">
             <div class="subject">SSD (c)</div>
             <div class="room">304CP</div>
           </div></td>
-          <td class="CET"><div class="slot pad">
+          <td><div class="slot pad CET">
             <div class="subject">CET (l)</div>
             <div class="room">B520</div>
           </div></td>
@@ -130,18 +196,28 @@
         <!-- 12-14 -->
         <tr>
           <th>12:00 – 14:00</th>
-          <td class="IPR"><div class="slot pad">
+          <td><div class="slot pad IPR">
             <div class="subject">IPR (c)</div>
             <div class="room">A109</div>
           </div></td>
           <td></td>
-          <td></td>
-          <td class="AIF"><div class="slot pad">
-            <div class="subject">AIF (c)</div>
-            <div class="room">ASPC</div>
-            <div class="badges"><span class="badge">even weeks</span></div>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
           </div></td>
-          <td class="AIF"><div class="slot pad">
+          <td>
+            <div class="slot pad AIF" data-show="even">
+              <div class="subject">AIF (c)</div>
+              <div class="room">ASPC</div>
+              <div class="badges"><span class="badge">even weeks</span></div>
+            </div>
+            <div class="slot pad WORK" data-show="odd">
+              <div class="subject">WORK</div>
+              <div class="room">Shift</div>
+              <div class="badges"><span class="badge">odd weeks</span></div>
+            </div>
+          </td>
+          <td><div class="slot pad AIF">
             <div class="subject">AIF (l)</div>
             <div class="room">P14</div>
           </div></td>
@@ -149,53 +225,156 @@
         <!-- 14-16 -->
         <tr>
           <th>14:00 – 16:00</th>
-          <td></td>
-          <td class="SSD"><div class="slot pad">
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
+          <td><div class="slot pad SSD">
             <div class="subject">SSD (l)</div>
             <div class="room">B426</div>
           </div></td>
-          <td></td>
-          <td></td>
-          <td class="SSD"><div class="slot pad">
-            <div class="subject">SSD (p)</div>
-            <div class="room">B426</div>
-            <div class="badges"><span class="badge">odd weeks</span></div>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
           </div></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
+          <td>
+            <div class="slot pad SSD" data-show="odd">
+              <div class="subject">SSD (p)</div>
+              <div class="room">B426</div>
+              <div class="badges"><span class="badge">odd weeks</span></div>
+            </div>
+            <div class="slot pad WORK" data-show="even">
+              <div class="subject">WORK</div>
+              <div class="room">Shift</div>
+              <div class="badges"><span class="badge">even weeks</span></div>
+            </div>
+          </td>
         </tr>
         <!-- 16-18 -->
         <tr>
           <th>16:00 – 18:00</th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td class="LSIC"><div class="slot pad">
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
+          <td><div class="slot pad LSIC">
             <div class="subject">LSIC (c)</div>
             <div class="room">A109</div>
           </div></td>
-          <td></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+          </div></td>
         </tr>
         <!-- 18-20 -->
         <tr>
           <th>18:00 – 20:00</th>
-          <td></td>
-          <td></td>
-          <td></td>
-          <td class="LSIC"><div class="slot pad">
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+            <div class="badges"><span class="badge">until 19:00</span></div>
+          </div></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+            <div class="badges"><span class="badge">until 19:00</span></div>
+          </div></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+            <div class="badges"><span class="badge">until 19:00</span></div>
+          </div></td>
+          <td><div class="slot pad LSIC">
             <div class="subject">LSIC (l)</div>
             <div class="room">B515</div>
           </div></td>
-          <td></td>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+            <div class="badges"><span class="badge">until 19:00</span></div>
+          </div></td>
         </tr>
       </tbody>
     </table>
 
     <div class="notes">
-      <strong>Notes:</strong> Thursday AIF (c) runs on even weeks only. Friday CET (c) runs weeks 1–10 only. Friday SSD (p) runs on odd weeks only. All other listed items are weekly unless noted.
+      <strong>Notes:</strong> Thursday AIF (c) runs on even weeks only. Friday CET (c) runs weeks 1–10 only. Friday SSD (p) runs on odd weeks only. Work shifts shown with stripes; Thursday work 12–14 appears on odd weeks only; Friday work 14–16 appears on even weeks only; all other listed work shifts are weekly.
     </div>
 
     <div class="footer">
+      <span>Generated for: Andrei</span>
       <span>Print tips: A4 • Landscape • 90–100% scale • Print backgrounds on</span>
     </div>
   </div>
+<script>
+(function(){
+  const root = document.documentElement;
+  // THEME TOGGLE
+  const themeKey = 'theme';
+  const savedTheme = localStorage.getItem(themeKey);
+  if(savedTheme === 'light' || savedTheme === 'dark'){
+    root.setAttribute('data-theme', savedTheme);
+  }
+  const btn = document.getElementById('themeToggle');
+  const sun = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5a1 1 0 0 1 1 1V7a1 1 0 1 1-2 0V5.5a1 1 0 0 1 1-1zm0 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5.05 5.05a1 1 0 0 1 1.41 0l1.06 1.06a1 1 0 1 1-1.41 1.41L5.05 6.46a1 1 0 0 1 0-1.41zM4.5 12a1 1 0 0 1 1-1H7a1 1 0 1 1 0 2H5.5a1 1 0 0 1-1-1zm11.99-5.89 1.06-1.06a1 1 0 1 1 1.41 1.41l-1.06 1.06a1 1 0 1 1-1.41-1.41zM17 12a1 1 0 1 1 0-2h1.5a1 1 0 1 1 0 2H17zm-9.48 5.48a1 1 0 1 1 1.41-1.41l1.06 1.06a1 1 0 1 1-1.41 1.41l-1.06-1.06zM12 17a1 1 0 0 1 1 1v1.5a1 1 0 1 1-2 0V18a1 1 0 0 1 1-1zm6.49.51-1.06-1.06a1 1 0 0 1 1.41-1.41l1.06 1.06a1 1 0 0 1-1.41 1.41z"/></svg>';
+  const moon = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  function setThemeUI(){
+    const dark = root.getAttribute('data-theme') === 'dark';
+    btn.setAttribute('aria-label', dark ? 'Light mode' : 'Dark mode');
+    btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    const icon = btn.querySelector('.icon');
+    const label = btn.querySelector('.label');
+    if(icon) icon.innerHTML = dark ? sun : moon;
+    if(label) label.textContent = dark ? 'Light mode' : 'Dark mode';
+  }
+  btn.addEventListener('click', () => {
+    const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem(themeKey, next);
+    setThemeUI();
+  });
+  setThemeUI();
+
+  // WEEK SELECTOR
+  const weekKey = 'week';
+  const weekSel = document.getElementById('weekSelect');
+  const parityEl = document.getElementById('weekParity');
+  const savedWeek = parseInt(localStorage.getItem(weekKey) || '1', 10);
+  if(savedWeek >=1 && savedWeek <= 14){ weekSel.value = String(savedWeek); }
+  function applyWeek(n){
+    const even = (n % 2) === 0;
+    parityEl.textContent = even ? `Week ${n} — even` : `Week ${n} — odd`;
+    document.querySelectorAll('[data-show]').forEach(el => {
+      const cond = el.getAttribute('data-show');
+      let show = true;
+      if(cond === 'odd') show = !even;
+      else if(cond === 'even') show = even;
+      else if(cond && cond.includes('-')){
+        const [a,b] = cond.split('-').map(x=>parseInt(x,10));
+        show = (n >= a && n <= b);
+      }
+      el.style.display = show ? '' : 'none';
+    });
+  }
+  weekSel.addEventListener('change', () => {
+    const n = parseInt(weekSel.value, 10) || 1;
+    localStorage.setItem(weekKey, String(n));
+    applyWeek(n);
+  });
+  applyWeek(parseInt(weekSel.value, 10));
+})();
+</script>
 </body>
 </html>
