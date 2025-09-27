@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Andrei — Timetable</title>
+<style>
+  :root{
+    --bg: #ffffff;
+    --ink: #0f172a;
+    --grid: #e5e7eb;
+    --muted: #6b7280;
+    /* subject colors (soft pastels with good print contrast) */
+    --aif: #e0f2fe;  /* sky-100 */
+    --dmd: #fde68a;  /* amber-200 */
+    --ipr: #fce7f3;  /* pink-100 */
+    --lsic:#dcfce7;  /* green-100 */
+    --cet: #ede9fe;  /* violet-100 */
+    --ssd: #fee2e2;  /* rose-100 */
+    --unknown: #fff7ed; /* orange-50 */
+    --badge: rgba(0,0,0,.08);
+  }
+  @media print {
+    body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+  *{ box-sizing: border-box; }
+  body{
+    margin:0; padding:24px; background:var(--bg); color:var(--ink);
+    font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", "Apple Color Emoji", "Segoe UI Emoji";
+  }
+  .page{ max-width: 1050px; margin: 0 auto; }
+  h1{ margin:0 0 6px; font-size: 28px; }
+  .sub{ color:var(--muted); font-size: 12px; margin-bottom: 16px; }
+  .legend{ display:flex; flex-wrap:wrap; gap:8px 14px; margin: 10px 0 18px; font-size:12px; }
+  .chip{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:10px; border:1px dashed var(--grid); }
+  .sw{ width:14px; height:14px; border-radius:4px; border:1px solid rgba(0,0,0,.08); }
+
+  table{ width:100%; border-collapse:separate; border-spacing:8px; }
+  thead th{ font-size:13px; font-weight:600; color:#111827; text-align:center; padding:6px 0; }
+  tbody th{ width:92px; text-align:right; padding:8px 10px; font-weight:600; font-size:12px; color:#111827; white-space:nowrap; }
+  td{ height:84px; vertical-align:top; border:1px solid var(--grid); border-radius:14px; padding:10px 12px; background:#fafafa; }
+  .slot{ display:flex; flex-direction:column; gap:6px; line-height:1.25; }
+  .subject{ font-weight:700; letter-spacing:.2px; }
+  .room{ font-size:12px; color:#111827; opacity:.95; }
+  .badges{ display:flex; gap:6px; flex-wrap:wrap; }
+  .badge{ font-size:10px; padding:3px 6px; border-radius:6px; background:var(--badge); }
+  /* subject backgrounds */
+  .AIF{ background:var(--aif); }
+  .DMD{ background:var(--dmd); }
+  .IPR{ background:var(--ipr); }
+  .LSIC{ background:var(--lsic); }
+  .CET{ background:var(--cet); }
+  .SSD{ background:var(--ssd); }
+  .UNK{ background:var(--unknown); border-style:dashed; }
+  /* spacing helpers inside cells */
+  .pad{ padding:10px 12px; border-radius:12px; height:100%; }
+  .notes{ margin-top:10px; font-size:11px; color:var(--muted); }
+  .footer{ margin-top:12px; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:var(--muted); }
+</style>
+</head>
+<body>
+  <div class="page">
+    <h1>Weekly Timetable</h1>
+    <div class="sub">All slots are 2 hours • No classes Sat/Sun • Abbrev: (c)=course, (l)=lab, (p)=project</div>
+
+    <div class="legend">
+      <span class="chip"><span class="sw" style="background:var(--aif)"></span>AIF — Artificial Intelligence Fundamentals</span>
+      <span class="chip"><span class="sw" style="background:var(--dmd)"></span>DMD — Digital Microsystems Design</span>
+      <span class="chip"><span class="sw" style="background:var(--ipr)"></span>IPR — Image Processing & Recognition</span>
+      <span class="chip"><span class="sw" style="background:var(--lsic)"></span>LSIC — Large Scale Integrated Circuits</span>
+      <span class="chip"><span class="sw" style="background:var(--cet)"></span>CET — Computer Engineering & Testing</span>
+      <span class="chip"><span class="sw" style="background:var(--ssd)"></span>SSD — Software Systems Design</span>
+    </div>
+
+    <table aria-label="Timetable">
+      <thead>
+        <tr>
+          <th></th>
+          <th>Monday</th>
+          <th>Tuesday</th>
+          <th>Wednesday</th>
+          <th>Thursday</th>
+          <th>Friday</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- 08-10 -->
+        <tr>
+          <th>08:00 – 10:00</th>
+          <td class="AIF"><div class="slot pad">
+            <div class="subject">AIF (c)</div>
+            <div class="room">204CP</div>
+          </div></td>
+          <td class="CET"><div class="slot pad">
+            <div class="subject">CET (c)</div>
+            <div class="room">304CP</div>
+          </div></td>
+          <td class="DMD"><div class="slot pad">
+            <div class="subject">DMD (l)</div>
+            <div class="room">B413B</div>
+          </div></td>
+          <td></td>
+          <td class="CET"><div class="slot pad">
+            <div class="subject">CET (c)</div>
+            <div class="room">304CP</div>
+            <div class="badges"><span class="badge">weeks 1-10</span></div>
+          </div></td>
+        </tr>
+        <!-- 10-12 -->
+        <tr>
+          <th>10:00 – 12:00</th>
+          <td class="DMD"><div class="slot pad">
+            <div class="subject">DMD (c)</div>
+            <div class="room">304CP</div>
+          </div></td>
+          <td class="IPR"><div class="slot pad">
+            <div class="subject">IPR (l)</div>
+            <div class="room">S4 ASPC</div>
+          </div></td>
+          <td></td>
+          <td class="SSD"><div class="slot pad">
+            <div class="subject">SSD (c)</div>
+            <div class="room">304CP</div>
+          </div></td>
+          <td class="CET"><div class="slot pad">
+            <div class="subject">CET (l)</div>
+            <div class="room">B520</div>
+          </div></td>
+        </tr>
+        <!-- 12-14 -->
+        <tr>
+          <th>12:00 – 14:00</th>
+          <td class="IPR"><div class="slot pad">
+            <div class="subject">IPR (c)</div>
+            <div class="room">A109</div>
+          </div></td>
+          <td></td>
+          <td></td>
+          <td class="AIF"><div class="slot pad">
+            <div class="subject">AIF (c)</div>
+            <div class="room">ASPC</div>
+            <div class="badges"><span class="badge">even weeks</span></div>
+          </div></td>
+          <td class="AIF"><div class="slot pad">
+            <div class="subject">AIF (l)</div>
+            <div class="room">P14</div>
+          </div></td>
+        </tr>
+        <!-- 14-16 -->
+        <tr>
+          <th>14:00 – 16:00</th>
+          <td></td>
+          <td class="SSD"><div class="slot pad">
+            <div class="subject">SSD (l)</div>
+            <div class="room">B426</div>
+          </div></td>
+          <td></td>
+          <td></td>
+          <td class="SSD"><div class="slot pad">
+            <div class="subject">SSD (p)</div>
+            <div class="room">B426</div>
+            <div class="badges"><span class="badge">odd weeks</span></div>
+          </div></td>
+        </tr>
+        <!-- 16-18 -->
+        <tr>
+          <th>16:00 – 18:00</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="LSIC"><div class="slot pad">
+            <div class="subject">LSIC (c)</div>
+            <div class="room">A109</div>
+          </div></td>
+          <td></td>
+        </tr>
+        <!-- 18-20 -->
+        <tr>
+          <th>18:00 – 20:00</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td class="LSIC"><div class="slot pad">
+            <div class="subject">LSIC (l)</div>
+            <div class="room">B515</div>
+          </div></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="notes">
+      <strong>Notes:</strong> Thursday AIF (c) runs on even weeks only. Friday CET (c) runs weeks 1–10 only. Friday SSD (p) runs on odd weeks only. All other listed items are weekly unless noted.
+    </div>
+
+    <div class="footer">
+      <span>Print tips: A4 • Landscape • 90–100% scale • Print backgrounds on</span>
+    </div>
+  </div>
+</body>
+</html>
