@@ -3,7 +3,8 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Andrei — Timetable</title>
+<title>Andrei's Timetable</title>
+<link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/3652/3652191.png">
 <style>
   :root{
     /* LIGHT THEME (used for print by default) */
@@ -81,6 +82,7 @@
   .room{ font-size:12px; color:var(--ink); opacity:.95; }
   .badges{ display:flex; gap:6px; flex-wrap:wrap; }
   .badge{ font-size:10px; padding:3px 6px; border-radius:6px; background:var(--badge); color:var(--ink); }
+ 
   /* subject backgrounds */
   .AIF{ background:var(--aif); }
   .DMD{ background:var(--dmd); }
@@ -99,7 +101,7 @@
 <body>
   <div class="page">
     <div class="topbar">
-      <h1>Weekly Timetable</h1>
+      <h1>Weekly Timetable for <a id="page" href="https://pcarioca.github.io">Andrei Munteanu</a></h1>
       <div class="actions">
         <label class="control">Week
           <select id="weekSelect" aria-label="Select academic week">
@@ -336,8 +338,10 @@
     btn.title = dark ? 'Switch to light mode' : 'Switch to dark mode';
     const icon = btn.querySelector('.icon');
     const label = btn.querySelector('.label');
+    const personalPage = document.querySelector('#page');;
     if(icon) icon.innerHTML = dark ? sun : moon;
     if(label) label.textContent = dark ? 'Light mode' : 'Dark mode';
+    if(personalPage) personalPage.style.color = dark ? 'white' : 'black';
   }
   btn.addEventListener('click', () => {
     const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
