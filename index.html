@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<!-- saved from url=(0040)https://pcarioca.github.io/my-timetable/ -->
+<html lang="en" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Andrei's Timetable</title>
 <link rel="icon" type="image/x-icon" href="https://cdn-icons-png.flaticon.com/512/3652/3652191.png">
 <style>
@@ -21,6 +21,9 @@
     --lsic:#dcfce7;  /* green-100 */
     --cet: #ede9fe;  /* violet-100 */
     --ssd: #fee2e2;  /* rose-100 */
+    --iac: #cffafe;  /* cyan-100 */
+    --aiasd: #dbeafe; /* blue-100 */
+    --tpcmt: #ecfccb; /* lime-100 */
     --unknown: #fff7ed; /* orange-50 */
     /* work stripe colors (light) */
     --workA: rgba(2,6,23,.04); /* very light slate */
@@ -36,7 +39,7 @@
     --cell:#111827; /* gray-900 */
     --badge: rgba(255,255,255,.14);
     /* subject colors (dark) */
-    --aif:#075985; --dmd:#92400e; --ipr:#9d174d; --lsic:#065f46; --cet:#5b21b6; --ssd:#7f1d1d; --unknown:#78350f;
+    --aif:#075985; --dmd:#92400e; --ipr:#9d174d; --lsic:#065f46; --cet:#5b21b6; --ssd:#7f1d1d; --iac:#164e63; --aiasd:#1e3a8a; --tpcmt:#365314; --unknown:#78350f;
     /* work stripe colors (dark) */
     --workA: rgba(148,163,184,.18); /* slate-400 */
     --workB: rgba(148,163,184,.34);
@@ -46,7 +49,7 @@
     /* Force light palette for print */
     :root{
       --bg: #ffffff; --ink: #0f172a; --grid:#e5e7eb; --muted:#475569; --cell:#ffffff; --badge: rgba(0,0,0,.08);
-      --aif:#e0f2fe; --dmd:#fde68a; --ipr:#fce7f3; --lsic:#dcfce7; --cet:#ede9fe; --ssd:#fee2e2; --unknown:#fff7ed;
+      --aif:#e0f2fe; --dmd:#fde68a; --ipr:#fce7f3; --lsic:#dcfce7; --cet:#ede9fe; --ssd:#fee2e2; --iac:#cffafe; --aiasd:#dbeafe; --tpcmt:#ecfccb; --unknown:#fff7ed;
       --workA: rgba(2,6,23,.04); --workB: rgba(2,6,23,.10); --workBorder:#94a3b8;
     }
     body{ -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -73,7 +76,7 @@
   .toggle:focus{ outline:2px solid var(--grid); outline-offset:2px; }
   .toggle .icon{ width:16px; height:16px; display:inline-block; }
 
-  table{ width:100%; border-collapse:separate; border-spacing:8px; }
+  table{ width:100%; border-collapse:separate; border-spacing:8px; table-layout: fixed; }
   thead th{ font-size:13px; font-weight:600; color:var(--ink); text-align:center; padding:6px 0; }
   tbody th{ width:92px; text-align:right; padding:8px 10px; font-weight:600; font-size:12px; color:var(--ink); white-space:nowrap; }
   td{ height:84px; vertical-align:top; border:1px solid var(--grid); border-radius:14px; padding:0; background:var(--cell); }
@@ -90,6 +93,9 @@
   .LSIC{ background:var(--lsic); }
   .CET{ background:var(--cet); }
   .SSD{ background:var(--ssd); }
+  .IAC{ background:var(--iac); }
+  .AIASD{ background:var(--aiasd); }
+  .TPCMT{ background:var(--tpcmt); }
   .UNK{ background:var(--unknown); border-style:dashed; }
   .WORK{ background: repeating-linear-gradient(135deg, var(--workA), var(--workA) 8px, var(--workB) 8px, var(--workB) 16px); border:1px dashed var(--workBorder); }
   /* spacing helpers inside cells */
@@ -101,7 +107,7 @@
 <body>
   <div class="page">
     <div class="topbar">
-      <h1>Weekly Timetable for <a id="page" href="https://pcarioca.github.io">Andrei Munteanu</a></h1>
+      <h1>Weekly Timetable for <a id="page" href="https://pcarioca.github.io/" style="color: white;">Andrei Munteanu</a></h1>
       <div class="actions">
         <label class="control">Week
           <select id="weekSelect" aria-label="Select academic week">
@@ -121,8 +127,8 @@
             <option value="14">14</option>
           </select>
         </label>
-        <span id="weekParity" class="badge" aria-live="polite"></span>
-        <button id="themeToggle" class="toggle" aria-label="Light mode" title="Toggle theme"><span class="icon" aria-hidden="true"></span><span class="label">Light mode</span></button>
+        <span id="weekParity" class="badge" aria-live="polite">Week 1 — odd</span>
+        <button id="themeToggle" class="toggle" aria-label="Light mode" title="Switch to light mode"><span class="icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 4.5a1 1 0 0 1 1 1V7a1 1 0 1 1-2 0V5.5a1 1 0 0 1 1-1zm0 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM5.05 5.05a1 1 0 0 1 1.41 0l1.06 1.06a1 1 0 1 1-1.41 1.41L5.05 6.46a1 1 0 0 1 0-1.41zM4.5 12a1 1 0 0 1 1-1H7a1 1 0 1 1 0 2H5.5a1 1 0 0 1-1-1zm11.99-5.89 1.06-1.06a1 1 0 1 1 1.41 1.41l-1.06 1.06a1 1 0 1 1-1.41-1.41zM17 12a1 1 0 1 1 0-2h1.5a1 1 0 1 1 0 2H17zm-9.48 5.48a1 1 0 1 1 1.41-1.41l1.06 1.06a1 1 0 1 1-1.41 1.41l-1.06-1.06zM12 17a1 1 0 0 1 1 1v1.5a1 1 0 1 1-2 0V18a1 1 0 0 1 1-1zm6.49.51-1.06-1.06a1 1 0 0 1 1.41-1.41l1.06 1.06a1 1 0 0 1-1.41 1.41z"></path></svg></span><span class="label">Light mode</span></button>
       </div>
     </div>
     <div class="sub">All slots are 2 hours • No classes Sat/Sun • Abbrev: (c)=course, (l)=lab, (p)=project • Striped cards = Work shifts</div>
@@ -130,14 +136,21 @@
     <div class="legend">
       <span class="chip"><span class="sw" style="background:var(--aif)"></span>AIF — Artificial Intelligence Fundamentals</span>
       <span class="chip"><span class="sw" style="background:var(--dmd)"></span>DMD — Digital Microsystems Design</span>
-      <span class="chip"><span class="sw" style="background:var(--ipr)"></span>IPR — Image Processing & Recognition</span>
+      <span class="chip"><span class="sw" style="background:var(--ipr)"></span>IPR — Image Processing &amp; Recognition</span>
       <span class="chip"><span class="sw" style="background:var(--lsic)"></span>LSIC — Large Scale Integrated Circuits</span>
-      <span class="chip"><span class="sw" style="background:var(--cet)"></span>CET — Computer Engineering & Testing</span>
+      <span class="chip"><span class="sw" style="background:var(--cet)"></span>CET — Computer Engineering &amp; Testing</span>
       <span class="chip"><span class="sw" style="background:var(--ssd)"></span>SSD — Software Systems Design</span>
+      <span class="chip"><span class="sw" style="background:var(--iac)"></span>IAC — Instruire Asistata de Calculator</span>
+      <span class="chip"><span class="sw" style="background:var(--aiasd)"></span>AIASD — AI assisted Software Development</span>
+      <span class="chip"><span class="sw" style="background:var(--tpcmt)"></span>TPCMT — Tutore Pentru Colegi Mai Tineri</span>
       <span class="chip"><span class="sw sw-work"></span>Work shift</span>
     </div>
 
     <table aria-label="Timetable">
+      <colgroup>
+        <col style="width:92px">
+        <col span="5">
+      </colgroup>
       <thead>
         <tr>
           <th></th>
@@ -160,9 +173,10 @@
             <div class="subject">CET (c)</div>
             <div class="room">304CP</div>
           </div></td>
-          <td><div class="slot pad DMD">
-            <div class="subject">DMD (l)</div>
-            <div class="room">B413B</div>
+          <td><div class="slot pad WORK">
+            <div class="subject">WORK</div>
+            <div class="room">Shift</div>
+            <div class="badges"><span class="badge">from 09:00</span></div>
           </div></td>
           <td></td>
           <td><div class="slot pad CET" data-show="1-10">
@@ -202,13 +216,16 @@
             <div class="subject">IPR (c)</div>
             <div class="room">A109</div>
           </div></td>
-          <td></td>
+          <td><div class="slot pad TPCMT">
+            <div class="subject">TPCMT (c)</div>
+            <div class="room">TBD</div>
+          </div></td>
           <td><div class="slot pad WORK">
             <div class="subject">WORK</div>
             <div class="room">Shift</div>
           </div></td>
           <td>
-            <div class="slot pad AIF" data-show="even">
+            <div class="slot pad AIF" data-show="even" style="display: none;">
               <div class="subject">AIF (c)</div>
               <div class="room">ASPC</div>
               <div class="badges"><span class="badge">even weeks</span></div>
@@ -249,9 +266,9 @@
               <div class="room">B426</div>
               <div class="badges"><span class="badge">odd weeks</span></div>
             </div>
-            <div class="slot pad WORK" data-show="even">
-              <div class="subject">WORK</div>
-              <div class="room">Shift</div>
+            <div class="slot pad IAC" data-show="even" style="display: none;">
+              <div class="subject">IAC (c)</div>
+              <div class="room">TBD</div>
               <div class="badges"><span class="badge">even weeks</span></div>
             </div>
           </td>
@@ -267,9 +284,9 @@
             <div class="subject">WORK</div>
             <div class="room">Shift</div>
           </div></td>
-          <td><div class="slot pad WORK">
-            <div class="subject">WORK</div>
-            <div class="room">Shift</div>
+          <td><div class="slot pad DMD">
+            <div class="subject">DMD (l)</div>
+            <div class="room">B413B</div>
           </div></td>
           <td><div class="slot pad LSIC">
             <div class="subject">LSIC (c)</div>
@@ -288,10 +305,9 @@
             <div class="room">Shift</div>
             <div class="badges"><span class="badge">until 19:00</span></div>
           </div></td>
-          <td><div class="slot pad WORK">
-            <div class="subject">WORK</div>
-            <div class="room">Shift</div>
-            <div class="badges"><span class="badge">until 19:00</span></div>
+          <td><div class="slot pad AIASD">
+            <div class="subject">AIASD (c)</div>
+            <div class="room">ASPC</div>
           </div></td>
           <td><div class="slot pad WORK">
             <div class="subject">WORK</div>
@@ -312,7 +328,7 @@
     </table>
 
     <div class="notes">
-      <strong>Notes:</strong> Thursday AIF (c) runs on even weeks only. Friday CET (c) runs weeks 1–10 only. Friday SSD (p) runs on odd weeks only. Work shifts shown with stripes; Thursday work 12–14 appears on odd weeks only; Friday work 14–16 appears on even weeks only; all other listed work shifts are weekly.
+      <strong>Notes:</strong> Thursday AIF (c) runs on even weeks only. Friday CET (c) runs weeks 1–10 only. Friday SSD (p) runs on odd weeks only. Friday IAC (c) runs on even weeks only. Work shifts shown with stripes; Thursday work 12–14 appears on odd weeks only; all other listed work shifts are weekly unless noted.
     </div>
 
     <div class="footer">
@@ -380,5 +396,6 @@
   applyWeek(parseInt(weekSel.value, 10));
 })();
 </script>
-</body>
-</html>
+
+
+</body></html>
